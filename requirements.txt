@@ -15,7 +15,7 @@ idna==3.11
 lxml==6.0.4
 oscrypto==1.3.0
 pillow==12.2.0
-pycairo==1.29.0
+# pycairo dihapus karena tidak kompatibel dengan Vercel
 pycparser==3.0
 pyHanko==0.34.1
 pyhanko-certvalidator==0.30.2
@@ -25,7 +25,7 @@ python-dotenv==1.2.2
 PyYAML==6.0.3
 reportlab==4.4.10
 requests==2.33.1
-rlPyCairo==0.4.0
+# rlPyCairo dihapus karena tidak kompatibel dengan Vercel
 six==1.17.0
 sqlparse==0.5.5
 svglib==1.6.0
