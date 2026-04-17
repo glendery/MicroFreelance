@@ -1,20 +1,6 @@
-# 🚀 MicroFreelance Platform
+# <img src="static/img/logo.png" width="40"> 🚀 MicroFreelance Platform
 
 **MicroFreelance** adalah platform marketplace freelance sederhana yang menghubungkan **Client** (pemberi kerja) dan **Freelancer** (pekerja lepas). Proyek ini dibangun menggunakan **Django Framework** dengan fokus pada integritas data transaksi dan pengalaman pengguna yang intuitif.
-
----
-
-## 📸 Screenshots Dokumentasi
-
-> **Catatan:** Masukkan screenshot aplikasi Anda ke folder `screenshots/` agar muncul di sini.
-
-| Dashboard Client | Browse Projects |
-| :---: | :---: |
-| ![Client Dashboard](screenshots/client_dashboard.png) | ![Browse Projects](screenshots/browse_projects.png) |
-
-| Project Detail & Chat | Invoice PDF |
-| :---: | :---: |
-| ![Project Detail](screenshots/project_detail.png) | ![Invoice PDF](screenshots/invoice_sample.png) |
 
 ---
 
@@ -37,6 +23,22 @@
 - **Activity Log**: Mencatat setiap aktivitas user demi keamanan (Middleware).
 - **Real-time Notifications**: Pemberitahuan otomatis saat status proyek berubah (Signals).
 - **REST API**: Endpoint API untuk integrasi data di masa depan (Django REST Framework).
+
+---
+
+## 📸 Dokumentasi Visual
+
+> **Instruksi**: Silakan ambil screenshot aplikasi Anda dan simpan di folder `screenshots/` dengan nama-nama berikut agar otomatis tampil di bawah ini:
+
+| Dashboard Client | Browse Projects |
+| :---: | :---: |
+| _(screenshots/client_dashboard.png)_ | _(screenshots/browse_projects.png)_ |
+| ![Client Dashboard](screenshots/client_dashboard.png) | ![Browse Projects](screenshots/browse_projects.png) |
+
+| Project Detail & Chat | Invoice PDF |
+| :---: | :---: |
+| _(screenshots/project_detail.png)_ | _(screenshots/invoice_sample.png)_ |
+| ![Project Detail](screenshots/project_detail.png) | ![Invoice PDF](screenshots/invoice_sample.png) |
 
 ---
 
