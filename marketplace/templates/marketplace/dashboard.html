@@ -1,0 +1,49 @@
+{% extends 'marketplace/base.html' %}
+
+{% block title %}Dashboard - MicroFreelance{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8 text-center">
+        <div class="avatar-xl bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 100px; height: 100px; background-color: rgba(41, 196, 139, 0.1);">
+            <span class="display-4">👋</span>
+        </div>
+        <h2 class="fw-bold mb-2">Halo, {{ user.username }}!</h2>
+        <p class="text-muted mb-5">Anda masuk sebagai <strong>{{ user.get_role_display }}</strong>. Pilih menu di bawah untuk melanjutkan.</p>
+        
+        <div class="row g-4 justify-content-center">
+            {% if user.role == 'CLIENT' %}
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4 h-100">
+                    <div class="card-body">
+                        <h4 class="fw-bold mb-3 text-primary">Kelola Proyek</h4>
+                        <p class="text-muted small mb-4">Posting proyek baru atau pantau perkembangan proyek yang sedang berjalan.</p>
+                        <a href="{% url 'client_dashboard' %}" class="btn btn-primary w-100 rounded-pill py-2">Masuk ke Dashboard Client</a>
+                    </div>
+                </div>
+            </div>
+            {% elif user.role == 'FREELANCER' %}
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4 h-100">
+                    <div class="card-body">
+                        <h4 class="fw-bold mb-3 text-success">Cari Kerja</h4>
+                        <p class="text-muted small mb-4">Temukan ribuan proyek mikro yang sesuai dengan keahlian Anda.</p>
+                        <a href="{% url 'freelancer_dashboard' %}" class="btn btn-success w-100 rounded-pill py-2">Masuk ke Dashboard Freelancer</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4 h-100">
+                    <div class="card-body">
+                        <h4 class="fw-bold mb-3 text-muted">Dompet</h4>
+                        <p class="text-muted small mb-4">Pantau transaksi dan saldo akun Anda secara real-time.</p>
+                        <a href="{% url 'top_up' %}" class="btn btn-outline-dark w-100 rounded-pill py-2">Cek Saldo (Rp {{ user.balance }})</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

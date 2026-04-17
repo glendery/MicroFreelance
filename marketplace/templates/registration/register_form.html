@@ -1,0 +1,45 @@
+{% extends 'marketplace/base.html' %}
+
+{% block title %}Daftar sebagai {{ role }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-lg p-4 rounded-4">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold">Daftar Akun {{ role }}</h3>
+                    <p class="text-muted small">Lengkapi data Anda di bawah ini</p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label small fw-bold">{{ field.label }}</label>
+                            {{ field.errors }}
+                            <div class="form-control-container">
+                                <input type="{{ field.field.widget.input_type }}" 
+                                       name="{{ field.name }}" 
+                                       id="{{ field.id_for_label }}" 
+                                       class="form-control rounded-pill px-3 py-2 border-0 bg-light" 
+                                       {% if field.field.required %}required{% endif %}>
+                            </div>
+                            {% if field.help_text %}
+                                <div class="form-text text-muted smaller mt-1" style="font-size: 0.75rem;">{{ field.help_text|safe }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 mt-4 fw-bold">Daftar Sekarang</button>
+                </form>
+                
+                <div class="mt-4 text-center">
+                    <p class="text-muted small">Sudah punya akun? <a href="{% url 'login' %}" class="text-primary fw-bold">Login</a></p>
+                    <a href="{% url 'register' %}" class="text-muted smaller">Kembali pilih role</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

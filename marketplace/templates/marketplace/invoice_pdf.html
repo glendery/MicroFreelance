@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin: 2cm;
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #29c48b;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .invoice-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #29c48b;
+        }
+        .info-row {
+            margin-bottom: 10px;
+        }
+        .label {
+            font-weight: bold;
+            width: 150px;
+            display: inline-block;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        .table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+        }
+        .total-section {
+            margin-top: 30px;
+            text-align: right;
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 10px;
+            text-align: center;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="invoice-title">BUKTI TRANSAKSI SAH</div>
+        <div>MicroFreelance Platform</div>
+    </div>
+
+    <div class="info-row">
+        <span class="label">ID Proyek:</span> #{{ project.id }}
+    </div>
+    <div class="info-row">
+        <span class="label">Tanggal:</span> {{ today|date:"d F Y" }}
+    </div>
+    <div class="info-row">
+        <span class="label">Client:</span> {{ project.client.username }}
+    </div>
+    <div class="info-row">
+        <span class="label">Freelancer:</span> {{ project.freelancer.username }}
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Deskripsi Pekerjaan</th>
+                <th style="text-align: right;">Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <strong>{{ project.title }}</strong><br>
+                    <small>{{ project.category.name|default:"Umum" }}</small>
+                </td>
+                <td style="text-align: right;">Rp {{ project.budget }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="total-section">
+        <div style="font-size: 18px; font-weight: bold; color: #29c48b;">
+            TOTAL PEMBAYARAN: Rp {{ project.budget }}
+        </div>
+        <div style="margin-top: 5px; color: #28a745; font-weight: bold;">
+            STATUS: LUNAS / SELESAI
+        </div>
+    </div>
+
+    <div class="footer">
+        Dokumen ini dihasilkan secara otomatis oleh sistem MicroFreelance.<br>
+        Segala bentuk manipulasi data pada dokumen ini adalah tindakan ilegal.<br>
+        &copy; 2026 MicroFreelance. All rights reserved.
+    </div>
+</body>
+</html>

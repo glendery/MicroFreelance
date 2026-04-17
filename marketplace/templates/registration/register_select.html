@@ -1,0 +1,39 @@
+{% extends 'marketplace/base.html' %}
+
+{% block title %}Daftar Akun Baru{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8 text-center">
+        <h2 class="fw-bold mb-4">Bergabung dengan MicroFreelance</h2>
+        <p class="text-muted mb-5">Pilih tipe akun yang sesuai dengan kebutuhan Anda</p>
+        
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-shadow p-4">
+                    <div class="card-body">
+                        <div class="display-4 mb-3 text-primary">💼</div>
+                        <h4 class="fw-bold">Saya Ingin Rekrut</h4>
+                        <p class="text-muted small mb-4">Posting tugas, cari freelancer berbakat, dan selesaikan pekerjaan Anda dengan cepat.</p>
+                        <a href="{% url 'register_client' %}" class="btn btn-primary w-100 rounded-pill">Daftar sebagai Client</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-shadow p-4">
+                    <div class="card-body">
+                        <div class="display-4 mb-3 text-success">🚀</div>
+                        <h4 class="fw-bold">Saya Ingin Kerja</h4>
+                        <p class="text-muted small mb-4">Temukan tugas mikro yang menarik, kerjakan kapan saja, dan dapatkan penghasilan tambahan.</p>
+                        <a href="{% url 'register_freelancer' %}" class="btn btn-success w-100 rounded-pill">Daftar sebagai Freelancer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-5">
+            <p class="text-muted">Sudah punya akun? <a href="{% url 'login' %}" class="text-primary fw-bold">Login di sini</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

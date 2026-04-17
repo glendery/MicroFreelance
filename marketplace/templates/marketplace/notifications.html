@@ -1,0 +1,43 @@
+{% extends 'marketplace/base.html' %}
+
+{% block title %}Notifikasi Saya - MicroFreelance{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold mb-0">Pemberitahuan Terbaru</h3>
+            <span class="badge bg-primary rounded-pill px-3">{{ notifications.count }} Total</span>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="list-group list-group-flush">
+                {% for notif in notifications %}
+                <div class="list-group-item p-4 border-0 border-bottom bg-transparent {% if not notif.is_read %}bg-light-subtle{% endif %}">
+                    <div class="d-flex w-100 justify-content-between align-items-start">
+                        <div class="d-flex align-items-start">
+                            <div class="avatar-sm bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold {% if not notif.is_read %}text-primary{% endif %}">{{ notif.title }}</h6>
+                                <p class="mb-0 text-secondary smaller">{{ notif.message }}</p>
+                                <small class="text-muted opacity-75 mt-2 d-block">{{ notif.created_at|timesince }} yang lalu</small>
+                            </div>
+                        </div>
+                        {% if not notif.is_read %}
+                        <span class="badge bg-primary rounded-pill smaller">Baru</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <div class="display-1 mb-4 opacity-25">📭</div>
+                    <h5 class="text-muted">Belum ada notifikasi untuk Anda.</h5>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'marketplace/base.html' %}
+{% load marketplace_tags %}
+
+{% block title %}Profil Freelancer - {{ freelancer.username }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Profile Sidebar -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+            <div class="bg-emerald py-5 text-center text-white">
+                <div class="avatar-xl bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px;">
+                    {% if freelancer.avatar %}
+                        <img src="{{ freelancer.avatar.url }}" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                    {% else %}
+                        <i class="fas fa-user-ninja fs-1"></i>
+                    {% endif %}
+                </div>
+                <h4 class="fw-bold mb-1">{{ freelancer.username }}</h4>
+                {% with level=freelancer.level_info %}
+                <div class="mb-2">
+                    <span class="badge {{ level.badge }} rounded-pill px-3 py-1 small">
+                        <i class="fas {{ level.icon }} me-1"></i> {{ level.name }}
+                    </span>
+                </div>
+                {% endwith %}
+                <p class="small opacity-75 mb-0">Freelancer Terverifikasi</p>
+                
+                <div class="mt-3">
+                    <div class="text-warning">
+                        {% if stats.avg_rating %}
+                            {% with rating=stats.avg_rating|floatformat:0 %}
+                            <i class="{% if rating >= '1' %}fas{% else %}far{% endif %} fa-star"></i>
+                            <i class="{% if rating >= '2' %}fas{% else %}far{% endif %} fa-star"></i>
+                            <i class="{% if rating >= '3' %}fas{% else %}far{% endif %} fa-star"></i>
+                            <i class="{% if rating >= '4' %}fas{% else %}far{% endif %} fa-star"></i>
+                            <i class="{% if rating >= '5' %}fas{% else %}far{% endif %} fa-star"></i>
+                            {% endwith %}
+                            <span class="text-white ms-1 fw-bold">({{ stats.avg_rating|floatformat:1 }})</span>
+                        {% else %}
+                            <span class="small opacity-75">Belum ada rating</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="row text-center g-3">
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-4">
+                            <div class="fw-bold fs-5 text-dark">{{ stats.completed_count }}</div>
+                            <div class="smaller text-muted">Selesai</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-4">
+                            <div class="fw-bold fs-5 text-dark">{{ reviews.count }}</div>
+                            <div class="smaller text-muted">Review</div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4 opacity-10">
+                <div class="mb-4">
+                    <label class="smaller fw-bold text-muted text-uppercase d-block mb-2">Total Pendapatan (Estimasi)</label>
+                    <div class="h5 fw-bold text-emerald mb-0">{{ stats.total_earned|rupiah }}</div>
+                </div>
+                <div class="mb-4">
+                    <label class="smaller fw-bold text-muted text-uppercase d-block mb-2">Member Sejak</label>
+                    <div class="small fw-bold">{{ freelancer.date_joined|date:"F Y" }}</div>
+                </div>
+                
+                {% if user.is_client %}
+                <button class="btn btn-emerald w-100 rounded-pill py-2 fw-bold" onclick="Swal.fire('Fitur Segera Datang', 'Fitur Undang Freelancer akan segera hadir!', 'info')">Undang Kerjasama</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-8">
+        <!-- Portfolio -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-white p-4 border-0">
+                <h5 class="fw-bold mb-0">Portofolio Kerja</h5>
+            </div>
+            <div class="card-body p-4 pt-0">
+                {% if portfolio %}
+                    <div class="row g-3">
+                        {% for project in portfolio %}
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-4 h-100">
+                                <span class="badge bg-light text-muted border rounded-pill px-3 mb-2 smaller">{{ project.category.name|default:"Umum" }}</span>
+                                <h6 class="fw-bold mb-2">{{ project.title }}</h6>
+                                <p class="smaller text-muted mb-0 line-clamp-2">{{ project.description|truncatewords:15 }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 bg-light rounded-4">
+                        <p class="text-muted mb-0 small">Belum ada proyek yang diselesaikan.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Reviews -->
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white p-4 border-0">
+                <h5 class="fw-bold mb-0">Review Client</h5>
+            </div>
+            <div class="card-body p-4 pt-0">
+                {% if reviews %}
+                    {% for review in reviews %}
+                    <div class="mb-4 {% if not forloop.last %}border-bottom pb-4{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-xs bg-emerald-subtle text-emerald rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px; font-size: 0.7rem;">
+                                    {{ review.project.client.username|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="small fw-bold">{{ review.project.client.username }}</div>
+                                    <div class="smaller text-muted">{{ review.created_at|date:"d M Y" }}</div>
+                                </div>
+                            </div>
+                            <div class="text-warning smaller">
+                                {% for i in "12345" %}
+                                    <i class="{% if forloop.counter <= review.rating %}fas{% else %}far{% endif %} fa-star"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="fw-bold small mb-1">Proyek: {{ review.project.title }}</div>
+                        <p class="small text-secondary mb-0">{{ review.comment }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4 bg-light rounded-4">
+                        <p class="text-muted mb-0 small">Belum ada review dari client.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

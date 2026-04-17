@@ -1,0 +1,229 @@
+{% load static marketplace_tags %}
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MicroFreelance - Platform Micro-Task Terpercaya{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert2 for Cool Notifications -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #29c48b;
+            --secondary-color: #2c3e50;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        
+        /* Skeleton Loading Animation */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 4px;
+        }
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Dark Mode Styles */
+        [data-bs-theme="dark"] {
+            --bg-light: #1a1d20;
+            background-color: #121416;
+        }
+        [data-bs-theme="dark"] .card { background-color: #212529; border: 1px solid #343a40; }
+        [data-bs-theme="dark"] .navbar { background-color: #212529 !important; border-bottom: 1px solid #343a40; }
+        
+        .nav-unread-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #ff4757;
+            border-radius: 50%;
+            display: inline-block;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top py-3">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">
+                <img src="{% static 'img/logo.png' %}" alt="Logo" class="d-inline-block align-text-top me-2" style="height: 35px;">
+                <span class="fw-bold text-primary">MicroFreelance</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" href="{% url 'dashboard' %}">Beranda</a>
+                        </li>
+                        {% if user.is_freelancer %}
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" href="{% url 'browse_projects' %}">Cari Kerja</a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <!-- Dark Mode Toggle -->
+                    <li class="nav-item me-3">
+                        <button class="btn btn-link nav-link px-0" id="darkModeToggle">
+                            <i class="fas fa-moon" id="darkModeIcon"></i>
+                        </button>
+                    </li>
+                    
+                    {% if user.is_authenticated %}
+                        <!-- Notifications -->
+                        <li class="nav-item me-3 position-relative">
+                            <a class="nav-link px-2" href="{% url 'notifications' %}">
+                                <i class="far fa-bell fs-5"></i>
+                                {% if user.has_unread_notifications %}
+                                <span class="nav-unread-dot"></span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="avatar-sm me-2 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    {% if user.avatar %}<img src="{{ user.avatar.url }}" class="rounded-circle w-100 h-100">{% else %}{{ user.username|first|upper }}{% endif %}
+                                </div>
+                                <span class="fw-semibold text-dark d-none d-md-inline">{{ user.username }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2" aria-labelledby="navbarDropdown">
+                                <li class="px-3 py-2 mb-2 bg-light rounded-3">
+                                    <div class="small text-muted">Saldo Tersedia</div>
+                                    <div class="fw-bold text-success">{{ user.balance|default:0|rupiah }}</div>
+                                </li>
+                                <li><a class="dropdown-item rounded-3" href="{% url 'top_up' %}"><i class="fas fa-wallet me-2 text-primary"></i> Top Up Saldo</a></li>
+                                {% if user.is_freelancer %}
+                                <li><a class="dropdown-item rounded-3" href="{% url 'withdraw' %}"><i class="fas fa-hand-holding-usd me-2 text-success"></i> Tarik Saldo</a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{% url 'logout' %}" method="post" class="m-0">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item rounded-3 text-danger"><i class="fas fa-sign-out-alt me-2"></i> Keluar</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" href="{% url 'login' %}">Masuk</a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-primary px-4 rounded-pill fw-bold" href="{% url 'register' %}">Daftar Gratis</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-5" style="min-height: 80vh;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-5 bg-white border-top">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <span class="fw-bold text-primary">MicroFreelance</span>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <a href="#" class="text-muted me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-muted me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-muted"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Dark Mode Logic
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeIcon = document.getElementById('darkModeIcon');
+        const htmlElement = document.documentElement;
+
+        // Check preference
+        if (localStorage.getItem('theme') === 'dark') {
+            htmlElement.setAttribute('data-bs-theme', 'dark');
+            darkModeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
+                htmlElement.setAttribute('data-bs-theme', 'light');
+                darkModeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.setAttribute('data-bs-theme', 'dark');
+                darkModeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // SweetAlert2 for Messages
+        const messageContainer = document.getElementById('django-messages');
+        if (messageContainer) {
+            const messages = JSON.parse(messageContainer.textContent);
+            
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            messages.forEach(msg => {
+                Toast.fire({
+                    icon: msg.tags === 'error' ? 'error' : (msg.tags === 'success' ? 'success' : 'info'),
+                    title: msg.text
+                });
+            });
+        }
+    </script>
+    
+    {% if messages %}
+    <script id="django-messages" type="application/json">
+        [
+            {% for message in messages %}
+                {"tags": "{{ message.tags }}", "text": "{{ message|escapejs }}"}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]
+    </script>
+    {% endif %}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

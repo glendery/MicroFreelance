@@ -1,0 +1,38 @@
+{% extends 'marketplace/base.html' %}
+{% load marketplace_tags %}
+
+{% block title %}Top Up Saldo{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-lg p-4 rounded-4">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="display-4 mb-2 text-emerald">💰</div>
+                    <h3 class="fw-bold">Top Up Saldo</h3>
+                    <p class="text-muted small">Saldo saat ini: <strong class="text-emerald">{{ user.balance|rupiah }}</strong></p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="amount" class="form-label small fw-bold text-muted">JUMLAH TOP UP (RP)</label>
+                        <input type="number" name="amount" id="amount" class="form-control rounded-pill px-4 py-3 border-0 bg-light shadow-sm fs-5 fw-bold" placeholder="Misal: 100000" min="1" required autofocus>
+                        <div class="form-text smaller mt-2 text-center">Saldo akan langsung masuk ke akun Anda.</div>
+                    </div>
+                    
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <a href="{% url 'dashboard' %}" class="btn btn-light w-100 rounded-pill py-2 fw-bold">Batal</a>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-success w-100 rounded-pill py-2 fw-bold shadow">Proses Top Up</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends 'marketplace/base.html' %}
+{% load marketplace_tags %}
+
+{% block title %}Dashboard Freelancer - MicroFreelance{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Sidebar / Stats -->
+    <div class="col-lg-4 col-md-5">
+        <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+            <div class="bg-primary py-4 text-center text-white">
+                <div class="avatar-xl bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                    <i class="fas fa-user-ninja fs-1"></i>
+                </div>
+                <h4 class="fw-bold mb-0">{{ user.username }}</h4>
+                {% with level=user.level_info %}
+                <div class="mt-2">
+                    <span class="badge {{ level.badge }} rounded-pill px-3 py-1 smaller">
+                        <i class="fas {{ level.icon }} me-1"></i> {{ level.name }}
+                    </span>
+                </div>
+                {% endwith %}
+                <p class="small opacity-75 mt-2 mb-0">Freelancer Terverifikasi</p>
+            </div>
+            <div class="card-body p-4">
+                <div class="row text-center g-3">
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-4">
+                            <div class="fw-bold fs-5 text-dark">{{ stats.completed }}</div>
+                            <div class="smaller text-muted">Selesai</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-4">
+                            <div class="fw-bold fs-5 text-dark">{{ stats.active }}</div>
+                            <div class="smaller text-muted">Aktif</div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4 opacity-10">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted small fw-bold text-uppercase">Total Pendapatan</span>
+                    <span class="fw-bold text-success">{{ stats.total_earned|rupiah }}</span>
+                </div>
+                <a href="{% url 'withdraw' %}" class="btn btn-outline-success btn-sm w-100 rounded-pill py-2 fw-bold">Tarik Saldo</a>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+            <h5 class="fw-bold mb-4">Aktivitas Kerja</h5>
+            <canvas id="freelancerStatsChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-8 col-md-7">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold mb-0">Tugas Saya</h3>
+            <a href="{% url 'browse_projects' %}" class="btn btn-primary rounded-pill px-4 fw-bold">
+                <i class="fas fa-search me-2"></i> Cari Tugas Baru
+            </a>
+        </div>
+
+        {% if my_projects %}
+            {% for project in my_projects %}
+            <div class="card border-0 shadow-sm rounded-4 mb-3 hover-shadow transition-all overflow-hidden border-start border-4 {% if project.status == 'IN_PROGRESS' %}border-warning{% elif project.status == 'REVIEW' %}border-primary{% elif project.status == 'COMPLETED' %}border-success{% endif %}">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-7">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-light text-dark border rounded-pill px-3 me-2 small">{{ project.category.name|default:"Umum" }}</span>
+                                <h5 class="fw-bold mb-0 text-dark">{{ project.title }}</h5>
+                            </div>
+                            <div class="d-flex align-items-center text-muted small">
+                                <i class="far fa-user me-1"></i> Client: <span class="fw-bold ms-1">{{ project.client.username }}</span>
+                                <span class="mx-2">•</span>
+                                <i class="far fa-calendar-alt me-1"></i> {{ project.created_at|date:"d M Y" }}
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-md-end my-3 my-md-0">
+                            <div class="fw-bold text-emerald fs-5">{{ project.budget|rupiah }}</div>
+                            <span class="badge 
+                                {% if project.status == 'IN_PROGRESS' %}bg-warning-subtle text-warning
+                                {% elif project.status == 'REVIEW' %}bg-primary-subtle text-primary
+                                {% elif project.status == 'COMPLETED' %}bg-success-subtle text-success
+                                {% endif %} 
+                                rounded-pill px-3 mt-1 fw-bold">
+                                {{ project.get_status_display }}
+                            </span>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-outline-dark btn-sm rounded-pill w-100 fw-bold">Detail</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5 bg-white rounded-4 shadow-sm mb-5">
+                <div class="display-1 mb-4 opacity-25">🔍</div>
+                <h5 class="text-muted">Anda belum mengambil tugas apapun.</h5>
+                <p class="text-muted small">Mulai cari tugas baru untuk menghasilkan uang!</p>
+            </div>
+        {% endif %}
+
+        <!-- Rekomendasi Tugas -->
+        <div class="mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-0">Lowongan Terbaru</h4>
+                    <p class="text-muted small mb-0">Tugas yang mungkin Anda sukai</p>
+                </div>
+                <a href="{% url 'browse_projects' %}" class="btn btn-link text-primary fw-bold text-decoration-none p-0">
+                    Lihat Semua <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="row g-4">
+                {% for project in open_projects %}
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-translate-y transition-all">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="badge bg-emerald-subtle text-emerald rounded-pill px-3 py-2 small fw-bold">
+                                    <i class="fas fa-tag me-1"></i> {{ project.category.name|default:"Umum" }}
+                                </span>
+                                <div class="text-emerald fw-bold fs-5">{{ project.budget|rupiah }}</div>
+                            </div>
+                            <h5 class="fw-bold mb-2 text-dark">{{ project.title }}</h5>
+                            <p class="text-muted small mb-4 flex-grow-1 line-clamp-2">{{ project.description|truncatewords:20 }}</p>
+                            
+                            <div class="mt-auto pt-3 border-top border-light d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-xs bg-light rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 0.75rem;">
+                                        <i class="fas fa-user-circle text-muted"></i>
+                                    </div>
+                                    <span class="smaller text-muted fw-medium">{{ project.client.username }}</span>
+                                </div>
+                                <button class="btn btn-emerald btn-sm rounded-pill px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#takeModal{{ project.id }}">
+                                    Ambil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Take Project Modal (for Dashboard) -->
+                <div class="modal fade" id="takeModal{{ project.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow-lg rounded-4">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold">Ambil Tugas Ini?</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4 text-center">
+                                <div class="mb-4">
+                                    <h4 class="fw-bold text-primary mb-2">{{ project.title }}</h4>
+                                    <p class="text-muted small px-3">{{ project.description }}</p>
+                                </div>
+                                <div class="bg-light p-3 rounded-3 mb-4">
+                                    <span class="text-muted small d-block">POTENSI PENDAPATAN</span>
+                                    <h3 class="fw-bold text-emerald mb-0">{{ project.budget|rupiah }}</h3>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-light w-100 rounded-pill fw-bold" data-bs-dismiss="modal">Batal</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <a href="{% url 'take_project' project.id %}" class="btn btn-emerald w-100 rounded-pill fw-bold">Konfirmasi Ambil</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-5 bg-light rounded-4 border border-dashed">
+                        <i class="fas fa-briefcase fa-3x text-muted opacity-25 mb-3"></i>
+                        <p class="text-muted mb-0">Belum ada lowongan baru saat ini.</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pass data safely to JS -->
+{{ stats.total|default:0|json_script:"stats-total" }}
+{{ stats.completed|default:0|json_script:"stats-completed" }}
+{{ stats.active|default:0|json_script:"stats-active" }}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Chart.js Stats
+    const ctx = document.getElementById('freelancerStatsChart').getContext('2d');
+    
+    // Get data from json_script
+    const total = JSON.parse(document.getElementById('stats-total').textContent);
+    const completed = JSON.parse(document.getElementById('stats-completed').textContent);
+    const active = JSON.parse(document.getElementById('stats-active').textContent);
+
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Total', 'Selesai', 'Aktif'],
+            datasets: [{
+                label: 'Jumlah Proyek',
+                data: [total, completed, active],
+                backgroundColor: ['#4285f4', '#29c48b', '#f39c12'],
+                borderRadius: 8,
+                barThickness: 30
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
+        }
+    });
+</script>
+{% endblock %}

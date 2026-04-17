@@ -1,0 +1,50 @@
+{% extends 'marketplace/base.html' %}
+
+{% block title %}Kirim Hasil Kerja - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-7">
+        <div class="card border-0 shadow-lg p-4 rounded-5 overflow-hidden">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="display-4 mb-3 text-warning"><i class="fas fa-rocket"></i></div>
+                    <h3 class="fw-bold">Kirim Hasil Kerja</h3>
+                    <p class="text-muted small">Tugas: <strong>{{ project.title }}</strong></p>
+                </div>
+                
+                <div class="bg-light p-4 rounded-4 mb-4 border-start border-primary border-4">
+                    <h6 class="fw-bold small mb-2 text-primary text-uppercase tracking-wider">INSTRUKSI TUGAS</h6>
+                    <p class="text-muted smaller mb-0">{{ project.description }}</p>
+                </div>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="work_submission" class="form-label small fw-bold text-muted text-uppercase tracking-wider">HASIL KERJA (TEKS / LINK)</label>
+                        <textarea name="work_submission" id="work_submission" class="form-control rounded-4 border-0 bg-light p-3" rows="6" placeholder="Masukkan link hasil kerja Anda (misal: GitHub, Google Drive) atau penjelasan tugas yang sudah diselesaikan." required></textarea>
+                        <div class="form-text smaller mt-2">Pastikan link dapat diakses oleh Client agar segera disetujui.</div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="work_file" class="form-label small fw-bold text-muted text-uppercase tracking-wider">UNGGAH FILE (OPSIONAL)</label>
+                        <div class="input-group">
+                            <input type="file" name="work_file" id="work_file" class="form-control rounded-pill border-0 bg-light px-4 py-2">
+                        </div>
+                        <div class="form-text smaller mt-2">Format: .zip, .pdf, .jpg, .png (Maks 10MB)</div>
+                    </div>
+                    
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-light w-100 rounded-pill py-3 fw-bold">Batal</a>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow">Kirim untuk Review</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
