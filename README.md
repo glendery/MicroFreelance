@@ -28,17 +28,15 @@
 
 ## 📸 Dokumentasi Visual
 
-> **Instruksi**: Silakan ambil screenshot aplikasi Anda dan simpan di folder `screenshots/` dengan nama-nama berikut agar otomatis tampil di bawah ini:
-
 | Dashboard Client | Browse Projects |
 | :---: | :---: |
-| _(screenshots/client_dashboard.png)_ | _(screenshots/browse_projects.png)_ |
-| ![Client Dashboard](screenshots/client_dashboard.png) | ![Browse Projects](screenshots/browse_projects.png) |
+| ![Client Dashboard](https://placehold.co/600x400?text=Dashboard+Client) | ![Browse Projects](https://placehold.co/600x400?text=Browse+Projects) |
 
 | Project Detail & Chat | Invoice PDF |
 | :---: | :---: |
-| _(screenshots/project_detail.png)_ | _(screenshots/invoice_sample.png)_ |
-| ![Project Detail](screenshots/project_detail.png) | ![Invoice PDF](screenshots/invoice_sample.png) |
+| ![Project Detail](https://placehold.co/600x400?text=Project+Detail) | ![Invoice PDF](https://placehold.co/600x400?text=Invoice+PDF+Sample) |
+
+> **Tips**: Untuk mengganti gambar di atas dengan screenshot asli, simpan file screenshot Anda di folder `screenshots/` lalu update link gambarnya di file ini.
 
 ---
 
