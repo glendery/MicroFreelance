@@ -22,3 +22,5 @@ ENV/
 
 # PDF Docs (optional, jika tidak ingin di-upload)
 # *.pdf
+
+.vercel
