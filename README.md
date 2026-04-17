@@ -93,11 +93,19 @@
 
 ## 👥 Akun Demo (Simulasi)
 
+Berikut adalah daftar akun yang terdaftar di sistem untuk keperluan pengujian dan presentasi:
+
 | Role | Username | Password |
 | :--- | :--- | :--- |
 | **Admin** | `admin` | `admin123` |
+| **Client** | `Manawar` | `pass123` |
 | **Client** | `pak_bambang` | `pass123` |
+| **Client** | `ibu_ratna` | `pass123` |
+| **Client** | `andre_startup` | `pass123` |
+| **Freelancer** | `glen` | `pass123` |
 | **Freelancer** | `rizky_design` | `pass123` |
+| **Freelancer** | `maya_writer` | `pass123` |
+| **Freelancer** | `fajar_dev` | `pass123` |
 
 ---
 
