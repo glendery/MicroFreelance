@@ -30,13 +30,11 @@
 
 | Dashboard Client | Browse Projects |
 | :---: | :---: |
-| ![Client Dashboard](https://placehold.co/600x400?text=Dashboard+Client) | ![Browse Projects](https://placehold.co/600x400?text=Browse+Projects) |
+| ![Client Dashboard](screenshots/client_dashboard.png) | ![Browse Projects](screenshots/browse_projects.png) |
 
 | Project Detail & Chat | Invoice PDF |
 | :---: | :---: |
-| ![Project Detail](https://placehold.co/600x400?text=Project+Detail) | ![Invoice PDF](https://placehold.co/600x400?text=Invoice+PDF+Sample) |
-
-> **Tips**: Untuk mengganti gambar di atas dengan screenshot asli, simpan file screenshot Anda di folder `screenshots/` lalu update link gambarnya di file ini.
+| ![Project Detail](screenshots/project_detail.png) | ![Invoice PDF](screenshots/invoice_sample.png) |
 
 ---
 
